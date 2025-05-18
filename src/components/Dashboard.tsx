@@ -4,9 +4,14 @@ import DirectoryPicker from './DirectoryPicker';
 import PhotoGrid from './PhotoGrid';
 import SelectionBar from './SelectionBar';
 import FolderNameModal from './FolderNameModal';
+import EmailModal from './EmailModal';
+import ActionModal from './ActionModal';
 import { downloadSelectedPhotos } from '../utils/fileSystem';
 import { Moon, Sun, X, Download } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { TnwEmailService, type EmailData } from '../services/EmailService';
+
+const emailService = new TnwEmailService();
 
 const Dashboard = () => {
   const {
@@ -25,7 +30,9 @@ const Dashboard = () => {
 
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [showReview, setShowReview] = useState(false);
+  const [showActionModal, setShowActionModal] = useState(false);
   const [showFolderNameModal, setShowFolderNameModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -39,11 +46,18 @@ const Dashboard = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  const handleDownloadSelected = () => {
-    const selectedPhotos = getSelectedPhotos();
-    if (selectedPhotos.length > 0) {
-      setShowFolderNameModal(true);
-    }
+  const handleActionClick = () => {
+    setShowActionModal(true);
+  };
+
+  const handleDownloadClick = () => {
+    setShowActionModal(false);
+    setShowFolderNameModal(true);
+  };
+
+  const handleEmailClick = () => {
+    setShowActionModal(false);
+    setShowEmailModal(true);
   };
 
   const handleConfirmDownload = (folderName: string) => {
@@ -59,6 +73,43 @@ const Dashboard = () => {
       .catch(error => {
         toast.error(error instanceof Error ? error.message : 'Erro ao salvar as fotos.');
       });
+  };
+
+  const handleSendEmail = async (to: string, subject: string, message: string) => {
+    const selectedPhotos = getSelectedPhotos();
+    setShowEmailModal(false);
+
+    const loadingToast = toast.loading('Enviando email...');
+
+    try {
+      // Convert photo URLs to Files
+      const files = await Promise.all(
+        selectedPhotos.map(async (photo) => {
+          console.log('Fetching photo:', photo.url);
+          const response = await fetch(photo.url);
+          const blob = await response.blob();
+          return new File([blob], photo.name, { type: blob.type });
+        })
+      );
+
+      const emailData: EmailData = {
+        to,
+        subject,
+        message,
+        files
+      };
+
+      await emailService.sendEmail(emailData);
+
+      toast.success('Email enviado com sucesso!', { id: loadingToast });
+      deselectAllPhotos();
+      setShowReview(false);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Erro ao enviar email.',
+        { id: loadingToast }
+      );
+    }
   };
 
   const handleSort = (criteria: 'name' | 'date' | 'size') => {
@@ -126,21 +177,34 @@ const Dashboard = () => {
                 Voltar para Galeria
               </button>
               <button
-                onClick={handleDownloadSelected}
+                onClick={handleActionClick}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
                          transition-colors flex items-center"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Baixar Fotos
+                Próximo
               </button>
             </div>
           </div>
         </footer>
 
+        <ActionModal
+          isOpen={showActionModal}
+          onClose={() => setShowActionModal(false)}
+          onDownload={handleDownloadClick}
+          onEmail={handleEmailClick}
+        />
+
         <FolderNameModal
           isOpen={showFolderNameModal}
           onClose={() => setShowFolderNameModal(false)}
           onConfirm={handleConfirmDownload}
+        />
+
+        <EmailModal
+          isOpen={showEmailModal}
+          onClose={() => setShowEmailModal(false)}
+          onSend={handleSendEmail}
         />
       </div>
     );
@@ -200,10 +264,23 @@ const Dashboard = () => {
         />
       </main>
 
+      <ActionModal
+        isOpen={showActionModal}
+        onClose={() => setShowActionModal(false)}
+        onDownload={handleDownloadClick}
+        onEmail={handleEmailClick}
+      />
+
       <FolderNameModal
         isOpen={showFolderNameModal}
         onClose={() => setShowFolderNameModal(false)}
         onConfirm={handleConfirmDownload}
+      />
+
+      <EmailModal
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+        onSend={handleSendEmail}
       />
     </div>
   );
