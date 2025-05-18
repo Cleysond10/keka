@@ -16,7 +16,7 @@ export class SmashEmailService implements EmailServiceAdapter {
 
   constructor() {
     this.uploader = new SmashUploader({
-      region: "eu-west-3",
+      region: import.meta.env.VITE_SMASH_API_REGION,
       token: import.meta.env.VITE_SMASH_API_KEY,
     });
   }
@@ -76,7 +76,7 @@ export class TnwEmailService implements EmailServiceAdapter {
         formData.append('files', file);
       }
 
-      const response = await fetch('http://localhost:3000/send-email', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/send-email`, {
         method: 'POST',
         body: formData,
       });
