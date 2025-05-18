@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Photo } from '../types';
 import PhotoItem from './PhotoItem';
-import { ImageOff, ChevronLeft, ChevronRight, CheckSquare } from 'lucide-react';
+import { ImageOff, X, ChevronLeft, ChevronRight, CheckSquare } from 'lucide-react';
 
 interface PhotoGridProps {
   photos: Photo[];
@@ -9,16 +9,22 @@ interface PhotoGridProps {
   onToggleSelect: (id: string) => void;
 }
 
-const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }) => {
+const PhotoGrid = ({ photos, loading, onToggleSelect }: PhotoGridProps) => {
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
   const [showGallery, setShowGallery] = useState<boolean>(false);
-  
+
   const handlePrevious = () => {
     setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
   };
 
   const handleNext = () => {
     setActivePhotoIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
+  };
+
+  const removeFileExtension = (filename: string) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) return filename;
+    return filename.slice(0, lastDotIndex);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,7 +44,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }
     }
     return undefined;
   }, [showGallery, activePhotoIndex]);
-  
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-gray-500">
@@ -47,7 +53,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }
       </div>
     );
   }
-  
+
   if (photos.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-gray-400 dark:text-gray-500">
@@ -60,57 +66,57 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }
 
   if (showGallery && photos.length > 0) {
     const activePhoto = photos[activePhotoIndex];
-    
+
     return (
       <div className="fixed inset-0 z-50 bg-black flex flex-col">
-        <div className="bg-black/50 px-6 py-4">
-          <h2 className="text-white text-xl font-medium truncate max-w-2xl mx-auto">
-            {activePhoto.name}
+        <header className="relative bg-black/50 px-4 py-2 flex items-center justify-between">
+          <button
+            onClick={() => onToggleSelect(activePhoto.id)}
+            className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors ${
+              activePhoto.selected
+                ? 'bg-blue-500 text-white'
+                : 'bg-black text-white hover:bg-gray-700'
+            }`}
+          >
+            <CheckSquare className="w-5 h-5" />
+            <span>{activePhoto.selected ? 'Selecionada' : 'Selecionar'}</span>
+          </button>
+
+          <h2 className="absolute left-1/2 transform -translate-x-1/2 text-white text-2xl font-semibold truncate max-w-4xl">
+            {removeFileExtension(activePhoto.name)}
           </h2>
-        </div>
-        
+
+          <button
+            onClick={() => setShowGallery(false)}
+            className="w-10 h-10 flex items-center justify-center text-white bg-black hover:bg-gray-700 rounded-full transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </header>
+
         <div className="flex-1 relative flex items-center justify-center">
           <img
             src={activePhoto.url}
             alt={activePhoto.name}
             className="max-h-[calc(100vh-12rem)] max-w-[calc(100vw-4rem)] object-contain"
           />
-          
+
           <button
             onClick={handlePrevious}
-            className="absolute left-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+            className="absolute left-4 p-2 rounded-full bg-black text-white hover:bg-gray-700 transition-colors"
             aria-label="Foto anterior"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+            className="absolute right-4 p-2 rounded-full bg-black text-white hover:bg-gray-700 transition-colors"
             aria-label="Próxima foto"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-          
-          <button
-            onClick={() => setShowGallery(false)}
-            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors"
-          >
-            ×
-          </button>
-          
-          <button
-            onClick={() => onToggleSelect(activePhoto.id)}
-            className={`absolute top-4 left-4 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors ${
-              activePhoto.selected
-                ? 'bg-blue-500 text-white'
-                : 'bg-black/50 text-white hover:bg-black/70'
-            }`}
-          >
-            <CheckSquare className="w-5 h-5" />
-            <span>{activePhoto.selected ? 'Selecionada' : 'Selecionar'}</span>
-          </button>
         </div>
-        
+
         <div className="h-24 bg-black/90 flex items-center overflow-x-auto">
           <div className="flex px-4 space-x-2">
             {photos.map((photo, index) => (
@@ -138,7 +144,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }
       </div>
     );
   }
-  
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4">
       {photos.map((photo, index) => (
@@ -150,12 +156,12 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, loading, onToggleSelect }
           }}
           className="cursor-pointer"
         >
-          <PhotoItem 
-            photo={photo} 
+          <PhotoItem
+            photo={photo}
             onToggleSelect={(id) => {
               onToggleSelect(id);
               event?.stopPropagation();
-            }} 
+            }}
           />
         </div>
       ))}

@@ -8,14 +8,14 @@ export const usePhotos = () => {
   const [error, setError] = useState<string | null>(null);
   const [directory, setDirectory] = useState<Directory>({ name: '', handle: null });
   const [selectedCount, setSelectedCount] = useState<number>(0);
-  
+
   const loadPhotosFromDirectory = useCallback(async () => {
     setError(null);
     setLoading(true);
-    
+
     try {
       const directoryHandle = await getDirectoryHandle();
-      
+
       if (directoryHandle) {
         const loadedPhotos = await readImagesFromDirectory(directoryHandle);
         setPhotos(loadedPhotos);
@@ -25,27 +25,30 @@ export const usePhotos = () => {
         });
       }
     } catch (err) {
-      setError('Failed to load photos. Please try again.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to load photos. Please try again.');
+      }
       console.error(err);
     } finally {
       setLoading(false);
     }
   }, []);
-  
+
   const togglePhotoSelection = useCallback((id: string) => {
     setPhotos(prevPhotos => {
-      const updatedPhotos = prevPhotos.map(photo => 
+      const updatedPhotos = prevPhotos.map(photo =>
         photo.id === id ? { ...photo, selected: !photo.selected } : photo
       );
-      
-      // Update selected count
+
       const newSelectedCount = updatedPhotos.filter(photo => photo.selected).length;
       setSelectedCount(newSelectedCount);
-      
+
       return updatedPhotos;
     });
   }, []);
-  
+
   const selectAllPhotos = useCallback(() => {
     setPhotos(prevPhotos => {
       const updatedPhotos = prevPhotos.map(photo => ({ ...photo, selected: true }));
@@ -53,7 +56,7 @@ export const usePhotos = () => {
       return updatedPhotos;
     });
   }, []);
-  
+
   const deselectAllPhotos = useCallback(() => {
     setPhotos(prevPhotos => {
       const updatedPhotos = prevPhotos.map(photo => ({ ...photo, selected: false }));
@@ -61,35 +64,35 @@ export const usePhotos = () => {
       return updatedPhotos;
     });
   }, []);
-  
+
   const getSelectedPhotos = useCallback(() => {
     return photos.filter(photo => photo.selected);
   }, [photos]);
-  
+
   const sortPhotos = useCallback((criteria: 'name' | 'date' | 'size', ascending = true) => {
     setPhotos(prevPhotos => {
       const sortedPhotos = [...prevPhotos].sort((a, b) => {
         let comparison = 0;
-        
+
         switch (criteria) {
-          case 'name':
-            comparison = a.name.localeCompare(b.name);
-            break;
           case 'date':
             comparison = a.lastModified - b.lastModified;
             break;
           case 'size':
             comparison = a.size - b.size;
             break;
+          default:
+            comparison = a.name.localeCompare(b.name);
+            break;
         }
-        
+
         return ascending ? comparison : -comparison;
       });
-      
+
       return sortedPhotos;
     });
   }, []);
-  
+
   return {
     photos,
     loading,
