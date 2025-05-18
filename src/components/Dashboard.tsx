@@ -9,9 +9,9 @@ import ActionModal from './ActionModal';
 import { downloadSelectedPhotos } from '../utils/fileSystem';
 import { Moon, Sun, X, Download } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
-import { TnwEmailService, type EmailData } from '../services/EmailService';
+import { SmashEmailService, type EmailData } from '../services/EmailService';
 
-const emailService = new TnwEmailService();
+const emailService = new SmashEmailService();
 
 const Dashboard = () => {
   const {
@@ -82,7 +82,6 @@ const Dashboard = () => {
     const loadingToast = toast.loading('Enviando email...');
 
     try {
-      // Convert photo URLs to Files
       const files = await Promise.all(
         selectedPhotos.map(async (photo) => {
           console.log('Fetching photo:', photo.url);
@@ -181,7 +180,6 @@ const Dashboard = () => {
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
                          transition-colors flex items-center"
               >
-                <Download className="w-4 h-4 mr-2" />
                 Próximo
               </button>
             </div>

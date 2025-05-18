@@ -23,12 +23,24 @@ export class SmashEmailService implements EmailServiceAdapter {
 
   async sendEmail(data: EmailData): Promise<void> {
     try {
-      // Upload files to Smash
       const transfer = await this.uploader.upload({
         files: data.files,
         title: data.subject,
         description: data.message,
-        // emails: [data.to]
+        delivery: {
+          type: "Email",
+          sender: {
+            name: "Cleide Fotos",
+            email: "cleidefotos2017@gmail.com",
+          },
+          receivers: [data.to],
+        },
+        notification: {
+          receiver: {
+            enabled: true,
+          }
+        },
+        language: "pt",
       });
 
       if (!transfer || !transfer.transfer) {
@@ -44,36 +56,29 @@ export class SmashEmailService implements EmailServiceAdapter {
 }
 
 export class TnwEmailService implements EmailServiceAdapter {
-  private readonly API_KEY = import.meta.env.VITE_TRANSFERNOW_API_KEY;
-  private readonly API_URL = 'https://api.transfernow.net/v1/transfers';
-
   async sendEmail(data: EmailData): Promise<void> {
     try {
       const now = new Date();
-      const validityEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
+      const validityEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-      const requestBody = {
-        langCode: 'en',
-        toEmails: [data.to],
-        files: data.files.map(file => ({
-          name: file.name,
-          size: file.size
-        })),
-        message: data.message,
-        subject: data.subject,
-        validityStart: now.toISOString(),
-        validityEnd: validityEnd.toISOString(),
-        allowPreview: true,
-        maxDownloads: 7
-      };
+      const formData = new FormData();
 
-      const response = await fetch(this.API_URL, {
+      formData.append('langCode', 'pt');
+      formData.append('validityStart', now.toISOString());
+      formData.append('validityEnd', validityEnd.toISOString());
+      formData.append('allowPreview', 'true');
+      formData.append('maxDownloads', '7');
+      formData.append('subject', data.subject);
+      formData.append('message', data.message);
+      formData.append('toEmails', JSON.stringify([data.to]));
+
+      for (const file of data.files) {
+        formData.append('files', file);
+      }
+
+      const response = await fetch('http://localhost:3000/send-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': this.API_KEY
-        },
-        body: JSON.stringify(requestBody)
+        body: formData,
       });
 
       if (!response.ok) {
