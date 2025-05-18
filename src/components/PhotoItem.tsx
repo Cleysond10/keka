@@ -8,18 +8,24 @@ interface PhotoItemProps {
   onToggleSelect: (id: string) => void;
 }
 
-const PhotoItem: React.FC<PhotoItemProps> = ({ photo, onToggleSelect }) => {
+const PhotoItem = ({ photo, onToggleSelect }: PhotoItemProps) => {
   const [showInfo, setShowInfo] = useState(false);
-  
+
+  const removeFileExtension = (filename: string) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) return filename;
+    return filename.slice(0, lastDotIndex);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       onToggleSelect(photo.id);
       e.preventDefault();
     }
   };
-  
+
   return (
-    <div 
+    <div
       className={`relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200
                 ${photo.selected ? 'ring-2 ring-blue-500 scale-[0.98]' : 'ring-1 ring-gray-200 dark:ring-gray-700'}
                 cursor-pointer`}
@@ -36,15 +42,15 @@ const PhotoItem: React.FC<PhotoItemProps> = ({ photo, onToggleSelect }) => {
                     ${photo.selected ? 'scale-105' : 'group-hover:scale-105'}`}
           loading="lazy"
         />
-        
+
         {photo.selected && (
           <div className="absolute inset-0 bg-blue-500 bg-opacity-10 flex items-center justify-center">
             <CheckSquare className="text-blue-500 w-8 h-8" />
           </div>
         )}
-        
+
         <button
-          className="absolute top-2 right-2 p-1.5 bg-black bg-opacity-40 hover:bg-opacity-60 
+          className="absolute top-2 right-2 p-1.5 bg-black bg-opacity-40 hover:bg-opacity-60
                    text-white rounded-lg transition-opacity opacity-0 group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
@@ -54,9 +60,9 @@ const PhotoItem: React.FC<PhotoItemProps> = ({ photo, onToggleSelect }) => {
         >
           <CheckSquare className="w-4 h-4" />
         </button>
-        
+
         <button
-          className="absolute bottom-2 right-2 p-1.5 bg-black bg-opacity-40 hover:bg-opacity-60 
+          className="absolute bottom-2 right-2 p-1.5 bg-black bg-opacity-40 hover:bg-opacity-60
                    text-white rounded-lg transition-opacity opacity-0 group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
@@ -67,14 +73,14 @@ const PhotoItem: React.FC<PhotoItemProps> = ({ photo, onToggleSelect }) => {
           <Info className="w-4 h-4" />
         </button>
       </div>
-      
+
       <div className="px-3 py-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-        <p className="text-sm font-medium truncate">{photo.name}</p>
+        <p className="text-sm font-medium truncate">{removeFileExtension(photo.name)}</p>
       </div>
-      
+
       {showInfo && (
-        <div 
-          className="absolute inset-0 bg-black bg-opacity-75 p-3 text-white text-sm 
+        <div
+          className="absolute inset-0 bg-black bg-opacity-75 p-3 text-white text-sm
                    flex flex-col justify-start"
           onClick={(e) => e.stopPropagation()}
         >
