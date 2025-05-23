@@ -7,7 +7,7 @@ import FolderNameModal from './FolderNameModal';
 import EmailModal from './EmailModal';
 import ActionModal from './ActionModal';
 import { downloadSelectedPhotos } from '../utils/fileSystem';
-import { Moon, Sun, X, Download } from 'lucide-react';
+import { Moon, Sun, X } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { SmashEmailService, type EmailData } from '../services/EmailService';
 
@@ -124,7 +124,7 @@ const Dashboard = () => {
         <header className="bg-white dark:bg-gray-800 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
             <h1 className="text-xl font-semibold">Revisar fotos selecionadas</h1>
-            {/* <button
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
               aria-label={theme === 'light' ? 'Mudar para modo escuro' : 'Mudar para modo claro'}
@@ -134,7 +134,7 @@ const Dashboard = () => {
               ) : (
                 <Sun className="w-5 h-5" />
               )}
-            </button> */}
+            </button>
           </div>
         </header>
 
@@ -215,7 +215,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
           <h1 className="text-xl font-semibold">KEKA - Sistema para Gestão de Fotos</h1>
 
-          {/* <button
+          <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             aria-label={theme === 'light' ? 'Mudar para modo escuro' : 'Mudar para modo claro'}
@@ -225,7 +225,7 @@ const Dashboard = () => {
             ) : (
               <Sun className="w-5 h-5" />
             )}
-          </button> */}
+          </button>
         </div>
       </header>
 
