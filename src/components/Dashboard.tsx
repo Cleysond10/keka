@@ -194,7 +194,7 @@ const Dashboard = () => {
               </button>
               <button
                 onClick={handleActionClick}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
+                className="px-4 py-2 bg-[#FF4801] hover:bg-[#DB2C1D] text-white rounded-lg
                          transition-colors flex items-center"
               >
                 Avançar

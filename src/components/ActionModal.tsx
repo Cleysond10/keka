@@ -34,8 +34,8 @@ const ActionModal: React.FC<ActionModalProps> = ({
         <div className="space-y-3">
           <button
             onClick={onDownload}
-            className="w-full flex items-center justify-center px-4 py-3 bg-blue-500
-                     hover:bg-blue-600 text-white rounded-lg transition-colors"
+            className="w-full flex items-center justify-center px-4 py-3 bg-[#FF4801]
+                     hover:bg-[#DB2C1D] text-white rounded-lg transition-colors"
           >
             <Download className="w-5 h-5 mr-2" />
             Baixar em Pasta

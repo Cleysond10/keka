@@ -39,7 +39,7 @@ const SelectionBar = ({
           selectedCount > 0 ? (
             <button
               onClick={onDeselectAll}
-              className="flex items-center text-sm text-blue-500 hover:text-blue-600"
+              className="flex items-center text-sm text-[#FF4801] hover:text-[#DB2C1D]"
               aria-label="Desmarcar todas as fotos"
             >
               <MinusSquare className="w-4 h-4 mr-1" />
@@ -48,7 +48,7 @@ const SelectionBar = ({
           ) : (
             <button
               onClick={onSelectAll}
-              className="flex items-center text-sm text-blue-500 hover:text-blue-600"
+              className="flex items-center text-sm text-[#FF4801] hover:text-[#DB2C1D]"
               aria-label="Selecionar todas as fotos"
             >
               <CheckSquare className="w-4 h-4 mr-1" />
@@ -112,7 +112,7 @@ const SelectionBar = ({
           disabled={selectedCount === 0}
           className={`flex items-center rounded-lg px-4 py-2 font-medium transition-colors duration-200
                   ${selectedCount > 0
-                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    ? 'bg-[#FF4801] hover:bg-[#DB2C1D] text-white'
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'}`}
           aria-label="Revisar fotos selecionadas"
         >

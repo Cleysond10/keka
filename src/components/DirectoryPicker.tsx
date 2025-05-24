@@ -28,7 +28,7 @@ const DirectoryPicker = ({
       <div className="flex items-center mb-4 sm:mb-0">
         {directoryName ? (
           <>
-            <FolderOpen className="w-5 h-5 text-blue-500 mr-2" />
+            <FolderOpen className="w-5 h-5 text-[#FF4801] mr-2" />
             <span className="font-medium text-gray-700 dark:text-gray-200">
               {directoryName}
             </span>
@@ -41,7 +41,7 @@ const DirectoryPicker = ({
       <button
         onClick={onPickDirectory}
         disabled={loading}
-        className="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600
+        className="flex items-center px-4 py-2 bg-[#FF4801] hover:bg-[#DB2C1D]
                  text-white font-medium rounded-lg transition-colors duration-200
                  disabled:bg-blue-300 disabled:cursor-not-allowed"
       >

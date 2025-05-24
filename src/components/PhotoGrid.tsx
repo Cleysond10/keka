@@ -48,7 +48,7 @@ const PhotoGrid = ({ photos, loading, onToggleSelect }: PhotoGridProps) => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-        <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-[#FF4801] rounded-full animate-spin mb-4"></div>
         <p>Carregando fotos...</p>
       </div>
     );
@@ -74,7 +74,7 @@ const PhotoGrid = ({ photos, loading, onToggleSelect }: PhotoGridProps) => {
             onClick={() => onToggleSelect(activePhoto.id)}
             className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors ${
               activePhoto.selected
-                ? 'bg-blue-500 text-white'
+                ? 'bg-[#FF4801] text-white'
                 : 'bg-black text-white hover:bg-gray-700'
             }`}
           >
@@ -124,7 +124,7 @@ const PhotoGrid = ({ photos, loading, onToggleSelect }: PhotoGridProps) => {
                 key={photo.id}
                 onClick={() => setActivePhotoIndex(index)}
                 className={`relative flex-shrink-0 h-20 w-20 rounded-lg overflow-hidden transition-transform ${
-                  index === activePhotoIndex ? 'ring-2 ring-blue-500 scale-105' : ''
+                  index === activePhotoIndex ? 'ring-2 ring-[#FF4801] scale-105' : ''
                 }`}
               >
                 <img
@@ -133,8 +133,8 @@ const PhotoGrid = ({ photos, loading, onToggleSelect }: PhotoGridProps) => {
                   className="h-full w-full object-cover"
                 />
                 {photo.selected && (
-                  <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full" />
+                  <div className="absolute inset-0 bg-[#FF4801]/20 flex items-center justify-center">
+                    <div className="w-3 h-3 bg-[#FF4801] rounded-full" />
                   </div>
                 )}
               </button>
