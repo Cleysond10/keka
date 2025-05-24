@@ -123,7 +123,24 @@ const Dashboard = () => {
         <Toaster position="top-right" />
         <header className="bg-white dark:bg-gray-800 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
-            <h1 className="text-xl font-semibold">Revisar fotos selecionadas</h1>
+            <div className="flex items-center">
+              {theme === 'dark' ? (
+                <img
+                  src="src/assets/logo-darktheme.png"
+                  alt="Logo"
+                  className="h-12 w-16 rounded-full"
+                />
+              ) : (
+                <img
+                  src="src/assets/logo-lighttheme.png"
+                  alt="Logo"
+                  className="h-12 w-16 rounded-full"
+                />
+              )}
+
+              <h1 className="text-xl font-semibold">Revise as fotos selecionadas</h1>
+            </div>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -177,10 +194,10 @@ const Dashboard = () => {
               </button>
               <button
                 onClick={handleActionClick}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
+                className="px-4 py-2 bg-[#FF4801] hover:bg-[#DB2C1D] text-white rounded-lg
                          transition-colors flex items-center"
               >
-                Próximo
+                Avançar
               </button>
             </div>
           </div>
@@ -213,7 +230,25 @@ const Dashboard = () => {
       <Toaster position="top-right" />
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
-          <h1 className="text-xl font-semibold">KEKA - Sistema para Gestão de Fotos</h1>
+          <div className="flex items-center">
+            {theme === 'dark' ? (
+              <img
+                src="src/assets/logo-darktheme.png"
+                alt="Logo"
+                className="h-12 w-16 rounded-full"
+              />
+            ) : (
+              <img
+                src="src/assets/logo-lighttheme.png"
+                alt="Logo"
+                className="h-12 w-16 rounded-full"
+              />
+            )}
+            <div className="ml-3">
+              <h1 className="text-xl font-semibold">KEKA</h1>
+              <p className="text-sm font-normal">Sistema para Gestão de Fotos</p>
+            </div>
+          </div>
 
           <button
             onClick={toggleTheme}

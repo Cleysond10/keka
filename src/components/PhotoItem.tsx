@@ -27,7 +27,7 @@ const PhotoItem = ({ photo, onToggleSelect }: PhotoItemProps) => {
   return (
     <div
       className={`relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200
-                ${photo.selected ? 'ring-2 ring-blue-500 scale-[0.98]' : 'ring-1 ring-gray-200 dark:ring-gray-700'}
+                ${photo.selected ? 'ring-2 ring-[#FF4801] scale-[0.98]' : 'ring-1 ring-gray-200 dark:ring-gray-700'}
                 cursor-pointer`}
       onKeyDown={handleKeyDown}
       tabIndex={0}
@@ -44,8 +44,8 @@ const PhotoItem = ({ photo, onToggleSelect }: PhotoItemProps) => {
         />
 
         {photo.selected && (
-          <div className="absolute inset-0 bg-blue-500 bg-opacity-10 flex items-center justify-center">
-            <CheckSquare className="text-blue-500 w-8 h-8" />
+          <div className="absolute inset-0 bg-[#FF4801] bg-opacity-10 flex items-center justify-center">
+            <CheckSquare className="text-[#FF4801] w-8 h-8" />
           </div>
         )}
 
