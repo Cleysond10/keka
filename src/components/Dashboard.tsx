@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { usePhotos } from '../hooks/usePhotos';
+import { Moon, Sun, X } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import DirectoryPicker from './DirectoryPicker';
 import PhotoGrid from './PhotoGrid';
 import SelectionBar from './SelectionBar';
 import FolderNameModal from './FolderNameModal';
 import EmailModal from './EmailModal';
 import ActionModal from './ActionModal';
+import LightLogo from '../assets/logo-lighttheme.png';
+import DarkLogo from '../assets/logo-darktheme.png';
+import { usePhotos } from '../hooks/usePhotos';
 import { downloadSelectedPhotos } from '../utils/fileSystem';
-import { Moon, Sun, X } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
 import { SmashEmailService, type EmailData } from '../services/EmailService';
 
 const emailService = new SmashEmailService();
@@ -124,19 +126,11 @@ const Dashboard = () => {
         <header className="bg-white dark:bg-gray-800 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
             <div className="flex items-center">
-              {theme === 'dark' ? (
-                <img
-                  src="src/assets/logo-darktheme.png"
-                  alt="Logo"
-                  className="h-12 w-16 rounded-full"
-                />
-              ) : (
-                <img
-                  src="src/assets/logo-lighttheme.png"
-                  alt="Logo"
-                  className="h-12 w-16 rounded-full"
-                />
-              )}
+              <img
+                src={theme === 'dark' ? DarkLogo : LightLogo}
+                alt="Logo"
+                className="h-12 w-16 rounded-full"
+              />
 
               <h1 className="text-xl font-semibold">Revise as fotos selecionadas</h1>
             </div>
@@ -231,19 +225,12 @@ const Dashboard = () => {
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 flex justify-between items-center">
           <div className="flex items-center">
-            {theme === 'dark' ? (
-              <img
-                src="src/assets/logo-darktheme.png"
-                alt="Logo"
-                className="h-12 w-16 rounded-full"
-              />
-            ) : (
-              <img
-                src="src/assets/logo-lighttheme.png"
-                alt="Logo"
-                className="h-12 w-16 rounded-full"
-              />
-            )}
+            <img
+              src={theme === 'dark' ? DarkLogo : LightLogo}
+              alt="Logo"
+              className="h-12 w-16 rounded-full"
+            />
+
             <div className="ml-3">
               <h1 className="text-xl font-semibold">KEKA</h1>
               <p className="text-sm font-normal">Sistema para Gestão de Fotos</p>
