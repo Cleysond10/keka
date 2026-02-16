@@ -1,18 +1,20 @@
 import React from 'react';
-import { X, Download, Mail } from 'lucide-react';
+import { X, Download, Mail, FileText } from 'lucide-react';
 
 interface ActionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDownload: () => void;
   onEmail: () => void;
+  onPDF: () => void;
 }
 
 const ActionModal: React.FC<ActionModalProps> = ({
   isOpen,
   onClose,
   onDownload,
-  onEmail
+  onEmail,
+  onPDF
 }) => {
   if (!isOpen) return null;
 
@@ -34,21 +36,32 @@ const ActionModal: React.FC<ActionModalProps> = ({
         <div className="space-y-3">
           <button
             onClick={onDownload}
-            className="w-full flex items-center justify-center px-4 py-3 bg-[#FF4801]
-                     hover:bg-[#DB2C1D] text-white rounded-lg transition-colors"
+            className="w-full flex items-center justify-center px-4 py-3 bg-blue-500
+                     hover:bg-blue-600 text-white rounded-lg transition-colors"
           >
             <Download className="w-5 h-5 mr-2" />
             Baixar em Pasta
           </button>
+          
+          <button
+            onClick={onPDF}
+            className="w-full flex items-center justify-center px-4 py-3 bg-[#FF4801]
+                     hover:bg-[#DB2C1D] text-white rounded-lg transition-colors"
+          >
+            <FileText className="w-5 h-5 mr-2" />
+            Baixar como PDF
+          </button>
 
           <button
+            disabled={true}
             onClick={onEmail}
             className="w-full flex items-center justify-center px-4 py-3 bg-green-500
-                     hover:bg-green-600 text-white rounded-lg transition-colors"
+                     hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Mail className="w-5 h-5 mr-2" />
             Enviar por Email
           </button>
+
         </div>
       </div>
     </div>

@@ -6,11 +6,13 @@ import PhotoGrid from './PhotoGrid';
 import SelectionBar from './SelectionBar';
 import FolderNameModal from './FolderNameModal';
 import EmailModal from './EmailModal';
+import PDFModal from './PDFModal';
 import ActionModal from './ActionModal';
 import LightLogo from '../assets/logo-lighttheme.png';
 import DarkLogo from '../assets/logo-darktheme.png';
 import { usePhotos } from '../hooks/usePhotos';
 import { downloadSelectedPhotos } from '../utils/fileSystem';
+import { generatePDFFromPhotos, downloadPDF } from '../utils/pdfGenerator';
 import { SmashEmailService, type EmailData } from '../services/EmailService';
 
 const emailService = new SmashEmailService();
@@ -35,6 +37,8 @@ const Dashboard = () => {
   const [showActionModal, setShowActionModal] = useState(false);
   const [showFolderNameModal, setShowFolderNameModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showPDFModal, setShowPDFModal] = useState(false);
+  const [isPDFGenerating, setIsPDFGenerating] = useState(false);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -60,6 +64,38 @@ const Dashboard = () => {
   const handleEmailClick = () => {
     setShowActionModal(false);
     setShowEmailModal(true);
+  };
+
+  const handlePDFClick = () => {
+    setShowActionModal(false);
+    setShowPDFModal(true);
+  };
+
+  const handleGeneratePDF = async (watermarkText: string, quality: number) => {
+    const selectedPhotos = getSelectedPhotos();
+    setIsPDFGenerating(true);
+
+    try {
+      const pdfBytes = await generatePDFFromPhotos(selectedPhotos, {
+        watermarkText,
+        imageQuality: quality,
+        onProgress: (progress) => {
+          console.log(`PDF generation progress: ${progress}%`);
+        }
+      });
+
+      downloadPDF(pdfBytes, 'fotos.pdf');
+      toast.success('PDF gerado e baixado com sucesso!');
+      deselectAllPhotos();
+      setShowReview(false);
+      setShowPDFModal(false);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Erro ao gerar PDF.'
+      );
+    } finally {
+      setIsPDFGenerating(false);
+    }
   };
 
   const handleConfirmDownload = (folderName: string) => {
@@ -100,7 +136,7 @@ const Dashboard = () => {
         files
       };
 
-      await emailService.sendEmail(emailData);
+      // await emailService.sendEmail(emailData);
 
       toast.success('Email enviado com sucesso!', { id: loadingToast });
       deselectAllPhotos();
@@ -202,6 +238,7 @@ const Dashboard = () => {
           onClose={() => setShowActionModal(false)}
           onDownload={handleDownloadClick}
           onEmail={handleEmailClick}
+          onPDF={handlePDFClick}
         />
 
         <FolderNameModal
@@ -214,6 +251,13 @@ const Dashboard = () => {
           isOpen={showEmailModal}
           onClose={() => setShowEmailModal(false)}
           onSend={handleSendEmail}
+        />
+
+        <PDFModal
+          isOpen={showPDFModal}
+          onClose={() => setShowPDFModal(false)}
+          onGenerate={handleGeneratePDF}
+          isGenerating={isPDFGenerating}
         />
       </div>
     );
@@ -289,6 +333,7 @@ const Dashboard = () => {
         onClose={() => setShowActionModal(false)}
         onDownload={handleDownloadClick}
         onEmail={handleEmailClick}
+        onPDF={handlePDFClick}
       />
 
       <FolderNameModal
@@ -301,6 +346,13 @@ const Dashboard = () => {
         isOpen={showEmailModal}
         onClose={() => setShowEmailModal(false)}
         onSend={handleSendEmail}
+      />
+
+      <PDFModal
+        isOpen={showPDFModal}
+        onClose={() => setShowPDFModal(false)}
+        onGenerate={handleGeneratePDF}
+        isGenerating={isPDFGenerating}
       />
     </div>
   );

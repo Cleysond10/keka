@@ -1,4 +1,4 @@
-import { SmashUploader } from "@smash-sdk/uploader";
+// import { SmashUploader } from "@smash-sdk/uploader";
 
 export interface EmailData {
   to: string;
@@ -8,51 +8,51 @@ export interface EmailData {
 }
 
 export interface EmailServiceAdapter {
-  sendEmail: (data: EmailData) => Promise<void>;
+  // sendEmail: (data: EmailData) => Promise<void>;
 }
 
 export class SmashEmailService implements EmailServiceAdapter {
-  private uploader: SmashUploader;
+  // private uploader: SmashUploader;
 
-  constructor() {
-    this.uploader = new SmashUploader({
-      region: import.meta.env.VITE_SMASH_API_REGION,
-      token: import.meta.env.VITE_SMASH_API_KEY,
-    });
-  }
+  // constructor() {
+  //   this.uploader = new SmashUploader({
+  //     region: import.meta.env.VITE_SMASH_API_REGION,
+  //     token: import.meta.env.VITE_SMASH_API_KEY,
+  //   });
+  // }
 
-  async sendEmail(data: EmailData): Promise<void> {
-    try {
-      const transfer = await this.uploader.upload({
-        files: data.files,
-        title: data.subject,
-        description: data.message,
-        delivery: {
-          type: "Email",
-          sender: {
-            name: "Cleide Fotos",
-            email: "cleidefotos2017@gmail.com",
-          },
-          receivers: [data.to],
-        },
-        notification: {
-          receiver: {
-            enabled: true,
-          }
-        },
-        language: "pt",
-      });
+  // async sendEmail(data: EmailData): Promise<void> {
+  //   try {
+  //     const transfer = await this.uploader.upload({
+  //       files: data.files,
+  //       title: data.subject,
+  //       description: data.message,
+  //       delivery: {
+  //         type: "Email",
+  //         sender: {
+  //           name: "Cleide Fotos",
+  //           email: "cleidefotos2017@gmail.com",
+  //         },
+  //         receivers: [data.to],
+  //       },
+  //       notification: {
+  //         receiver: {
+  //           enabled: true,
+  //         }
+  //       },
+  //       language: "pt",
+  //     });
 
-      if (!transfer || !transfer.transfer) {
-        throw new Error('Failed to upload files to Smash');
-      }
+  //     if (!transfer || !transfer.transfer) {
+  //       throw new Error('Failed to upload files to Smash');
+  //     }
 
-      console.log('Smash transfer created:', transfer);
-    } catch (error) {
-      console.error('Smash upload error:', error);
-      throw new Error('Failed to send files. Please try again.');
-    }
-  }
+  //     console.log('Smash transfer created:', transfer);
+  //   } catch (error) {
+  //     console.error('Smash upload error:', error);
+  //     throw new Error('Failed to send files. Please try again.');
+  //   }
+  // }
 }
 
 export class TnwEmailService implements EmailServiceAdapter {
